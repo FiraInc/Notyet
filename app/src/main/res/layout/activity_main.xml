@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/eggHatcher"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.unknown.notyet.HatchEgg">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"/>
+
+    <ImageView
+        android:id="@+id/blackEgg"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/egg_black"/>
+
+    <ImageView
+        android:id="@+id/customEgg"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/egg_black"
+        android:onClick="eggClicked"/>
+
+    <ImageView
+        android:id="@+id/hatchStatus"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="eggClicked"/>
+
+    <TextView
+        android:id="@+id/center"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/thinkStart"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/center"
+        android:layout_marginBottom="40dp"/>
+
+    <ImageView
+        android:id="@+id/thinkBubble"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/think_bubble"
+        android:layout_toRightOf="@id/thinkStart"
+        android:layout_above="@id/thinkStart" />
+
+    <TextView
+        android:id="@+id/tapMeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/thinkBubble"
+        android:layout_alignRight="@id/thinkBubble"
+        android:layout_alignTop="@id/thinkBubble"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="17sp"
+        android:text="Tap me"/>
+
+    <TextView
+        android:id="@+id/subtitles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:text="Oh!"/>
+
+
+    <ImageView
+        android:id="@+id/explosionEffect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"/>
+
+    <ImageView
+        android:id="@+id/blackScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"/>
+
+
+</RelativeLayout>

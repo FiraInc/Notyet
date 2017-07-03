@@ -412,19 +412,19 @@ public class HatchEgg extends Activity {
         }else if (requestCode == NAME_REQUEST_CODE) {
             String result = data.getStringExtra("result");
             if (!result.equals("NONAME")) {
-                Saver.saveString("CreatureCustomName", newCreatureNumber, result);
+                Saver.saveString("Creatures", "CreatureCustomName", newCreatureNumber, result);
             }else {
-                Saver.saveString("CreatureCustomName", newCreatureNumber, creatureName);
+                Saver.saveString("Creatures", "CreatureCustomName", newCreatureNumber, creatureName);
             }
-            Saver.saveString("InstallComplete", 0, "1");
+            Saver.saveString("Default", "InstallComplete", 0, "1");
             Intent intent = new Intent(this, Home.class);
             startActivity(intent);
             finish();
         }else if (requestCode == ARE_YOU_SURE_SKIP) {
             String result = data.getStringExtra("result");
             if (result.equals("1")) {
-                Saver.saveString("CreatureCustomName", newCreatureNumber, creatureName);
-                Saver.saveString("InstallComplete", 0, "1");
+                Saver.saveString("Creatures", "CreatureCustomName", newCreatureNumber, creatureName);
+                Saver.saveString("Default", "InstallComplete", 0, "1");
                 Intent intent = new Intent(this, Home.class);
                 startActivity(intent);
                 finish();
@@ -442,6 +442,10 @@ public class HatchEgg extends Activity {
     }
 
     private void generateCreature() {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int day = c.get(Calendar.DAY_OF_YEAR);
+
         Log.e("CURRENTMIL", String.valueOf(currentMil + 1));
 
         CreatureGenerator.generateCreature(this);
@@ -451,7 +455,14 @@ public class HatchEgg extends Activity {
         bm = CreatureGenerator.creatureImage.getBitmap();
         Saver.runSave("CreatureImage", newCreatureNumber, bm);
         creatureName = CreatureGenerator.creatureName;
-        Saver.saveString("CreatureName", newCreatureNumber, creatureName);
+        Saver.saveString("Creatures", "CreatureName", newCreatureNumber, creatureName);
+        Saver.saveString("Creatures", "CreatureAliveStatus", newCreatureNumber, "true");
+        Saver.saveString("Creatures", "FoodHour", newCreatureNumber, String.valueOf(hour));
+        Saver.saveString("Creatures", "FoodDay", newCreatureNumber, String.valueOf(day));
+        Saver.saveString("Creatures", "FoodStatus", newCreatureNumber, "100");
+        Saver.saveString("Creatures", "Health", newCreatureNumber, "100");
+        Saver.saveString("Default", "InstallComplete", 0, "true");
+        Saver.saveString("Default", "defaultCreature", 0, String.valueOf(newCreatureNumber));
 
         saveLevelCreature();
     }
@@ -460,24 +471,23 @@ public class HatchEgg extends Activity {
         currentLevel = "";
         if (currentMil >= 950) {
             currentLevel = "10";
-            Saver.saveString("CreatureXPNeeded", newCreatureNumber, "100");
+            Saver.saveString("Creatures", "CreatureXPNeeded", newCreatureNumber, "100");
         }else if (currentMil >= 500) {
             currentLevel = "6";
-            Saver.saveString("CreatureXPNeeded", newCreatureNumber, "60");
+            Saver.saveString("Creatures", "CreatureXPNeeded", newCreatureNumber, "60");
         }else if (currentMil >= 300) {
             currentLevel = "7";
-            Saver.saveString("CreatureXPNeeded", newCreatureNumber, "70");
+            Saver.saveString("Creatures", "CreatureXPNeeded", newCreatureNumber, "70");
         }else if (currentMil <= 300) {
             currentLevel = "4";
-            Saver.saveString("CreatureXPNeeded", newCreatureNumber, "20");
+            Saver.saveString("Creatures", "CreatureXPNeeded", newCreatureNumber, "20");
         }else {
             currentLevel = "5";
-            Saver.saveString("CreatureXPNeeded", newCreatureNumber, "25");
+            Saver.saveString("Creatures", "CreatureXPNeeded", newCreatureNumber, "25");
         }
 
-        Saver.saveString("Health", newCreatureNumber, "100");;
-        Saver.saveString("CreatureXP", newCreatureNumber, "0");
-        Saver.saveString("CreatureLevel", newCreatureNumber, currentLevel);
+        Saver.saveString("Creatures", "CreatureXP", newCreatureNumber, "0");
+        Saver.saveString("Creatures", "CreatureLevel", newCreatureNumber, currentLevel);
         CreatureGenerator.creatureLevel = Integer.valueOf(currentLevel);
     }
 

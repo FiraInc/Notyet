@@ -8,14 +8,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Created by Johannett321 on 26.02.2017.
  */
 
 public class Launcher extends Activity {
+
+    File file;
+    StringBuilder text;
+    String creatureDirectory;
+    int currentCreature = 1;
+
+    static boolean firstLaunchTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +44,11 @@ public class Launcher extends Activity {
 
     private void checkInstallation() {
         if (Environment.getExternalStorageDirectory().canWrite()) {
-            File file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/InstallComplete.txt");
+            file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/InstallComplete.txt");
             if (!file.exists()) {
                 askForPermissions();
             }else {
-                startHome();
+                startLaunchProcess();
             }
         }else {
             askForPermissions();
@@ -63,7 +74,7 @@ public class Launcher extends Activity {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startHatching();
+                    runInstall();
                 } else {
                     askForPermissions();
                 }
@@ -76,6 +87,57 @@ public class Launcher extends Activity {
         Intent intent = new Intent(this, HatchEgg.class);
         startActivity(intent);
         finish();
+    }
+
+    private void startLaunchProcess() {
+        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/defaultCreature.txt");
+        text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close() ;
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!text.toString().isEmpty()) {
+            currentCreature = Integer.parseInt(text.toString());
+            CurrentCreatureInfo.getAllCreatureInfo(this, currentCreature);
+            if (CurrentCreatureInfo.foodStatus > 0 && CurrentCreatureInfo.health > 0) {
+                startHome();
+            }else {
+                startDeadScreen();
+            }
+        }else {
+            currentCreature = 1;
+            getCreatureDirectory();
+        }
+    }
+
+    private void startDeadScreen() {
+        Intent intent = new Intent(this, AllDead.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void getCreatureDirectory() {
+        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentCreature) + "/");
+        if (file.exists()) {
+            CurrentCreatureInfo.getAllCreatureInfo(this, currentCreature);
+            Saver.saveStringWithLocation(this, "/UnknownYet/", "defaultCreature.txt", String.valueOf(currentCreature));
+            if (CurrentCreatureInfo.health > 0 && CurrentCreatureInfo.foodStatus > 0) {
+                startHome();
+            }else {
+                startDeadScreen();
+            }
+        }else {
+            startHatching();
+        }
+
+
     }
 
     private void startHome() {

@@ -1,15 +1,18 @@
 package com.unknown.notyet;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -44,7 +47,7 @@ public class Saver {
         }
     }
 
-    public Bitmap drawableToBitmap(PictureDrawable pd) {
+    static public Bitmap drawableToBitmap(PictureDrawable pd) {
         Bitmap bm = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bm);
         canvas.drawPicture(pd.getPicture());
@@ -80,9 +83,15 @@ public class Saver {
     }
 
 
-    public static void saveString(String fileName, int creatureNumber, String data) {
+    public static void saveString(String folderLocation, String fileName, int creatureNumber, String data) {
         numberCreature = creatureNumber;
-        getCreatureDirectory();
+        if (folderLocation.equals("Creatures")) {
+            getCreatureDirectory();
+        }else if (folderLocation.equals("Items")) {
+            getItemsDirectory();
+        }else {
+            getDefaultDirectory();
+        }
         Log.e("CreatureDirectory is", creatureDirectory);
         File file;
         if (creatureNumber > 0) {
@@ -102,6 +111,93 @@ public class Saver {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void storeSave(String item, int newAmount) {
+        int amount;
+        File file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Items/" + item);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Items/" + item + "/ItemAmount.txt");
+        StringBuilder text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close() ;
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!text.toString().isEmpty()) {
+            if (Integer.parseInt(text.toString()) <= 0) {
+                amount = 0;
+            }else {
+                amount = Integer.parseInt(text.toString());
+            }
+        }else {
+            amount = 0;
+        }
+
+        amount = amount + newAmount;
+
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            writer.write(String.valueOf(amount));
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveStringWithLocation(Context context, String fileLocation, String fileNameWithExtension, String data) {
+        File file = new File(context.getFilesDir(), fileLocation);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        file = new File(context.getFilesDir(), fileLocation + fileNameWithExtension);
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            writer.write(String.valueOf(data));
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void getDefaultDirectory() {
+        Log.e("GettingDirectory is", String.valueOf(numberCreature));
+        creatureDirectory = ("/UnknownYet/");
+        File file = new File(Environment.getExternalStorageDirectory(), creatureDirectory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    private static void getItemsDirectory() {
+        Log.e("GettingDirectory is", String.valueOf(numberCreature));
+        creatureDirectory = ("/UnknownYet/Items/Item" + String.valueOf(numberCreature) + "/");
+        File file = new File(Environment.getExternalStorageDirectory(), creatureDirectory);
+        if (!file.exists()) {
+            file.mkdirs();
         }
     }
 

@@ -49,7 +49,7 @@
         android:layout_alignTop="@id/topBar"
         android:layout_alignBottom="@id/topBar"
         android:background="@android:color/holo_orange_dark"
-        android:onClick="openSearcher"
+        android:onClick="creatureInventoryClicked"
         />
 
     <LinearLayout
@@ -58,12 +58,16 @@
         android:layout_height="30dp"
         android:layout_below="@id/topBar"
         android:layout_marginTop="10dp"
-        android:layout_alignLeft="@id/topBar">
+        android:layout_alignLeft="@id/topBar"
+        android:layout_marginLeft="10dp">
 
-        <ImageView
+        <TextView
+            android:id="@+id/foodStatus"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="100" />
 
     </LinearLayout>
 
@@ -130,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="startBattle"/>
+            android:onClick="openSearcher"/>
     </LinearLayout>
 
     <ImageView

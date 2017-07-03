@@ -258,6 +258,7 @@ public class Battle extends Activity {
     }
 
     private void runFromBattle() {
+        CreatureInventory.inBattle = false;
         blackScreen.setVisibility(View.VISIBLE);
         blackScreen.animate().setDuration(2000).alpha(1).setListener(new AnimatorListenerAdapter() {
             @Override
@@ -298,9 +299,9 @@ public class Battle extends Activity {
     }
 
     private void clickInventory() {
-        Intent intent = new Intent(this, Inventory.class);
+        Intent intent = new Intent(this, CreatureInventory.class);
         startActivity(intent);
-        Inventory.inBattle = true;
+        CreatureInventory.inBattle = true;
     }
 
     public void attack1(View view) {

@@ -2,27 +2,19 @@ package com.unknown.notyet;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Johannett321 on 03.03.2017.
@@ -32,26 +24,33 @@ public class Inventory extends Activity {
 
     ArrayList<InventoryItems> arrayOfItems;
     static InventoryAdapter adapter;
-    GridView grid;
+    ListView listView;
 
-    static int currentItem = 1;
-
-    String titleToBeAdded;
-    Bitmap bitmapToBeAdded;
+    String itemNameToBeAdded;
+    String itemAmountToBeAdded;
+    String itemDescriptionToBeAdded;
+    BitmapDrawable bitmapToBeAdded;
 
     File file;
-    StringBuilder text;
 
     ProgressBar progressBar;
-    String StatusAlive;
+    static String category = "Food";
 
     static Boolean inBattle = false;
+
+    TextView categoryText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventory);
 
+        createOn();
+
+
+    }
+
+    private void createOn() {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         progressBar.setVisibility(View.VISIBLE);
@@ -60,56 +59,14 @@ public class Inventory extends Activity {
 
         adapter = new InventoryAdapter(this, arrayOfItems);
 
-        grid = (GridView) findViewById(R.id.grid);
-        grid.setAdapter(adapter);
+        listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(adapter);
 
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (inBattle) {
-                    if (adapter.getItem(position).AliveStatus.equals("1")) {
-                        Home.currentCreature = adapter.getItem(position).ItemFolderNumber;
-                        backToBattle(adapter.getItem(position).ItemFolderNumber);
-                    }else {
-                        CreatureInfo.currentCreature = adapter.getItem(position).ItemFolderNumber;
-                        showInfo();
-                    }
-                }else {
-                    if (adapter.getItem(position).AliveStatus.equals("1")) {
-                        Home.currentCreature = adapter.getItem(position).ItemFolderNumber;
-                        homeGo();
-                    }else {
-                        CreatureInfo.currentCreature = adapter.getItem(position).ItemFolderNumber;
-                        showInfo();
-                    }
-                }
-            }
-        });
-
-        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (inBattle) {
-                    CreatureInfo.inBattle = true;
-                }
-                CreatureInfo.currentCreature = adapter.getItem(position).ItemFolderNumber;
-                showInfo();
-
-                return true;
-            }
-        });
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadItems();
-            }
-        }, 500);
+        categoryText = (TextView) findViewById(R.id.categoryText);
+        categoryText.setText(category);
     }
 
     private void backToBattle(int Position) {
-        currentItem = 1;
         Battle.currentCreature = Position;
         super.onBackPressed();
     }
@@ -120,86 +77,40 @@ public class Inventory extends Activity {
         startActivity(intent);
     }
 
-    private void loadItemsTest() {
-        titleToBeAdded = "TURID";
-        bitmapToBeAdded = BitmapFactory.decodeResource(this.getResources(), R.drawable.damage1);
-        addItem();
-    }
-
-    private void loadItems() {
-        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentItem));
-        if (file.exists()) {
-            file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentItem) + "/CreatureCustomName" + ".txt");
-            text = new StringBuilder();
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                }
-                br.close() ;
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (!text.toString().isEmpty()) {
-                titleToBeAdded = text.toString();
-            }else {
-                titleToBeAdded = "Unknown";
-            }
-
-            text.setLength(0);
-
-
-            file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentItem) + "/CreatureAliveStatus" + ".txt");
-            text = new StringBuilder();
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                }
-                br.close() ;
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (text.toString().equals("true")) {
-                StatusAlive = "1";
-            }else if (currentItem == 1) {
-                StatusAlive = "1";
-            }else {
-                StatusAlive = "0";
-            }
-            text.setLength(0);
-
-
-
-            try {
-                String externalStorage = Environment.getExternalStorageDirectory().getPath();
-                Bitmap creatureBitmap = BitmapFactory.decodeFile(externalStorage + "/UnknownYet/Creature" + String.valueOf(currentItem) + "/CreatureImage.png");
-                bitmapToBeAdded = creatureBitmap;
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-
+    private void newItemLoader() {
+        adapter.clear();
+        if (category.equals("Food")) {
+            itemNameToBeAdded = "Bread";
+            Items.getItem(this, itemNameToBeAdded);
+            itemAmountToBeAdded = String.valueOf(Items.itemAmountToBeAdded);
+            itemDescriptionToBeAdded = Items.itemDescription;
+            bitmapToBeAdded = Items.bitmapToBeAdded;
             addItem();
-            currentItem  = currentItem + 1;
-            loadItems();
-        }else {
-            adapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.INVISIBLE);
+        }else if (category.equals("Special")) {
+            itemNameToBeAdded = "Egg";
+            Items.getItem(this, itemNameToBeAdded);
+            itemAmountToBeAdded = String.valueOf(Items.itemAmountToBeAdded);
+            itemDescriptionToBeAdded = Items.itemDescription;
+            bitmapToBeAdded = Items.bitmapToBeAdded;
+            addItem();
         }
+
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
 
     private void addItem() {
+        Log.e("HEELEDLAJKDKLPS", itemNameToBeAdded);
+
         try {
-            InventoryItems newItem = new InventoryItems(titleToBeAdded, bitmapToBeAdded, currentItem, StatusAlive);
+            InventoryItems newItem = new InventoryItems(itemNameToBeAdded, bitmapToBeAdded, itemAmountToBeAdded, itemDescriptionToBeAdded);
             adapter.add(newItem);
+            Log.e("HEELEDLAJKDKLPS", itemNameToBeAdded + "Done");
         }catch (Exception e) {
             e.printStackTrace();
         }
+
+        Log.e("HEELEDLAJKDKLPS", itemNameToBeAdded + "Done2");
     }
 
     @Override
@@ -222,16 +133,13 @@ public class Inventory extends Activity {
             Home.music.start();
         }
 
-        progressBar.setVisibility(View.VISIBLE);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                currentItem = 1;
-                adapter.clear();
-                loadItems();
+                newItemLoader();
             }
-        },500);
+        }, 200);
     }
 
     @Override
@@ -248,23 +156,50 @@ public class Inventory extends Activity {
     }
 
     private void homeGo() {
-        currentItem = 1;
         Home.doNotStartMusic = true;
         super.onBackPressed();
     }
 
-    public void startHatch(View view) {
-        Home.music.stop();
-        Intent intent = new Intent(this, HatchEgg.class);
+    public void storeClicked(View view) {
+        Home.doNotStartMusic = true;
+        Intent intent = new Intent(this, Store.class);
         startActivity(intent);
+        overridePendingTransition(0,0);
         finish();
     }
 
-    public void storeClicked(View view) {
-        Home.doNotStartMusic = true;
-        currentItem = 1;
-        Intent intent = new Intent(this, Store.class);
-        startActivity(intent);
-        finish();
+    public void changeCategory(View view) {
+        setContentView(R.layout.category_browser);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 2000);
+    }
+
+    public void closeChangeCategory() {
+        setContentView(R.layout.inventory);
+        categoryText = (TextView) findViewById(R.id.categoryText);
+        categoryText.setText(category);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createOn();
+                newItemLoader();
+            }
+        }, 500);
+    }
+
+    public void changeCategoryToFood(View view) {
+        category = "Food";
+        closeChangeCategory();
+    }
+
+    public void changeCategoryToSpecial(View view) {
+        category = "Special";
+        closeChangeCategory();
     }
 }

@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="70dp">
 
     <ImageView
         android:id="@+id/itemImage"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignTop="@+id/RelativeLay"
-        android:layout_alignBottom="@+id/RelativeLay"/>
+        android:layout_marginBottom="10dp"/>
 
     <RelativeLayout
         android:id="@+id/RelativeLay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/itemImage"
+        android:layout_alignTop="@id/itemImage"
+        android:layout_alignBottom="@id/itemImage"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
         android:gravity="center">
 
         <TextView
@@ -39,13 +38,40 @@
 
     </RelativeLayout>
 
-
+    <ImageView
+        android:id="@+id/buyButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/holo_green_light"/>
 
     <TextView
         android:id="@+id/itemPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"/>
+        android:layout_alignLeft="@id/buyButton"
+        android:layout_alignBottom="@id/buyButton"
+        android:layout_alignTop="@id/buyButton"
+        android:layout_alignRight="@id/buyButton"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:text="20"/>
+
+
+    <TextView
+        android:id="@+id/amountLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/buyButton"
+        android:layout_marginRight="5dp"
+        android:textSize="15sp"
+        android:text="20"/>
+
+
+
 
 </RelativeLayout>

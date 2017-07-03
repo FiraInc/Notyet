@@ -2,7 +2,6 @@ package com.unknown.notyet;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,11 +10,9 @@ import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +21,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
 import static android.widget.RelativeLayout.CENTER_VERTICAL;
@@ -39,11 +37,9 @@ public class Home extends Activity {
 
     TextView CreatureNameTextView;
     TextView CreatureLevelTextView;
+    TextView foodStatus;
 
     static int currentCreature = 1;
-    int creatureLevel;
-
-    String creatureName;
 
     RelativeLayout.LayoutParams params;
 
@@ -64,12 +60,11 @@ public class Home extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
-        InventoryAdapter.creatureNumberArray = new ArrayList<>();
+        CreatureInventoryAdapter.creatureNumberArray = new ArrayList<>();
 
         findViews();
         creatureSetParams();
-        //blackScreen.setVisibility(View.VISIBLE);
-        //removeBlackScreen();
+        removeBlackScreen();
 
         getCreatureDirectory();
 
@@ -81,6 +76,39 @@ public class Home extends Activity {
     }
 
     private void getCreatureDirectory() {
+        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentCreature) + "/CreatureAliveStatus.txt");
+        text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close() ;
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (text.toString().equals("true")) {
+            text.setLength(0);
+            file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/Creature" + String.valueOf(currentCreature) + "/Health.txt");
+            text = new StringBuilder();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                }
+                br.close() ;
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (Integer.parseInt(text.toString()) < 0) {
+                //todo handle Death
+            }
+        }
+
+
         if (currentCreature > 0) {
             setDirecoryFromInventory();
         }else {
@@ -110,6 +138,7 @@ public class Home extends Activity {
         creatureImage = (ImageView) findViewById(R.id.creatureImage);
         CreatureNameTextView = (TextView) findViewById(R.id.CreatureName);
         CreatureLevelTextView = (TextView) findViewById(R.id.level);
+        foodStatus = (TextView) findViewById(R.id.foodStatus);
     }
 
     private void creatureSetParams() {
@@ -124,18 +153,7 @@ public class Home extends Activity {
     }
 
     private void loadCreature() {
-        try {
-            String externalStorage = Environment.getExternalStorageDirectory().getPath();
-            Bitmap creatureBitmap = BitmapFactory.decodeFile(externalStorage + creatureDirectory + "CreatureImage" + ".png");
-            creatureImage.setImageBitmap(creatureBitmap);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        //setName
-
-        file = new File(Environment.getExternalStorageDirectory(), creatureDirectory + "CreatureCustomName" + ".txt");
+        file = new File(Environment.getExternalStorageDirectory(), "/UnknownYet/defaultCreature.txt");
         text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -148,50 +166,47 @@ public class Home extends Activity {
             e.printStackTrace();
         }
 
-        creatureName = text.toString();
-        CreatureNameTextView.setText(creatureName);
-
-        text.setLength(0);
-
-
-
-        //setLevel
-        file = new File(Environment.getExternalStorageDirectory(), creatureDirectory + "CreatureLevel" + ".txt");
-        text = new StringBuilder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-            }
-            br.close() ;
-        }catch (IOException e) {
-            e.printStackTrace();
+        if (!text.toString().isEmpty()) {
+            currentCreature = Integer.parseInt(text.toString());
+        }else {
+            currentCreature = 1;
         }
 
-        creatureLevel = Integer.parseInt(text.toString());
-        CreatureLevelTextView.setText(String.valueOf(creatureLevel));
-        text.setLength(0);
+        CurrentCreatureInfo.getAllCreatureInfo(this, currentCreature);
+
+        creatureImage.setImageBitmap(CurrentCreatureInfo.creatureBitmap);
+
+        CreatureNameTextView.setText(CurrentCreatureInfo.customName);
+
+        CreatureLevelTextView.setText(String.valueOf(CurrentCreatureInfo.level));
+
+        foodStatus.setText(String.valueOf(CurrentCreatureInfo.foodStatus));
     }
 
     private void removeBlackScreen() {
-        blackScreen.animate().setDuration(2000).alpha(0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                blackScreen.setVisibility(View.INVISIBLE);
-            }
-        });
+        if (Launcher.firstLaunchTime) {
+            blackScreen.setVisibility(View.VISIBLE);
+
+            blackScreen.animate().setDuration(2000).alpha(0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    blackScreen.setVisibility(View.INVISIBLE);
+                    Launcher.firstLaunchTime = false;
+                }
+            });
+        }else {
+            blackScreen.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void levelUP(View view) {
-        Leveling.levelUp(this, currentCreature, 50);
+        //Leveling.levelUp(this, currentCreature, 50);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getDirectory();
         loadCreature();
         if(musicStartOver) {
             music = MediaPlayer.create(this, R.raw.home_music);
@@ -214,6 +229,14 @@ public class Home extends Activity {
         }else {
 
         }
+
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_YEAR);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+
+        Saver.saveString("Creatures", "FoodHour", currentCreature, String.valueOf(hour));
+        Saver.saveString("Creatures", "FoodDay", currentCreature, String.valueOf(day));
+        Saver.saveString("Creatures", "FoodStatus", currentCreature, String.valueOf(CurrentCreatureInfo.foodStatus));
     }
 
     public void inventoryShopClicked(View view) {
@@ -229,5 +252,14 @@ public class Home extends Activity {
         Intent intent = new Intent(this, Searcher.class);
         startActivity(intent);
         overridePendingTransition(R.animator.pull_in_top_slow, R.animator.push_out_bottom_slow);
+    }
+
+    public void creatureInventoryClicked(View view) {
+        soundFX = MediaPlayer.create(this, R.raw.crack4);
+        soundFX.start();
+        doNotStopMusic = true;
+        CreatureInventory.inBattle = false;
+        Intent intent = new Intent(this, CreatureInventory.class);
+        startActivity(intent);
     }
 }

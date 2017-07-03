@@ -71,7 +71,7 @@ public class CreatureLoader {
     }
 
     public static void saveHealth (int creatureNumber) {
-        Saver.saveString("Health", creatureNumber, String.valueOf(yourHealth));
+        Saver.saveString("Creatures", "Health", creatureNumber, String.valueOf(yourHealth));
     }
 
     public static void loadAttacks (int creatureNumber) {

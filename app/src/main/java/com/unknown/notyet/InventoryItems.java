@@ -1,7 +1,7 @@
 package com.unknown.notyet;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 
 /**
  * Created by Johannett321 on 04.03.2017.
@@ -10,19 +10,15 @@ import android.graphics.drawable.Drawable;
 public class InventoryItems {
 
     public String Title;
-    public int ItemFolderNumber;
-    public Bitmap ImageBitmap;
-    public String AliveStatus;
+    public String Description;
+    public String Amount;
+    public BitmapDrawable ImageBitmap;
 
-    public InventoryItems(String title, Bitmap imageBitmap, int itemFolderNumber, String aliveStatus) {
+    public InventoryItems(String title, BitmapDrawable imageBitmap, String amount, String description) {
         this.Title = title;
         this.ImageBitmap = imageBitmap;
-        this.ItemFolderNumber = itemFolderNumber;
-        if (aliveStatus.equals("1")){
-            this.AliveStatus = "1";
-        }else {
-            this.AliveStatus = "0";
-        }
+        this.Amount = amount;
+        this.Description = description;
 
     }
 

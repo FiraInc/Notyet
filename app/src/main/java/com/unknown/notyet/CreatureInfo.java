@@ -130,16 +130,14 @@ public class CreatureInfo extends Activity {
             Toast.makeText(this, "You cannot transfer you main creature to a card", Toast.LENGTH_LONG).show();
         }else {
             if (isItAlive) {
-                Saver.saveString("CreatureAliveStatus", currentCreature, "false");
+                Saver.saveString("Creatures", "CreatureAliveStatus", currentCreature, "false");
                 AliveButton.setText("Transfer from card");
                 isItAlive = false;
-                Inventory.currentItem = 1;
                 Inventory.adapter.clear();
             }else {
-                Saver.saveString("CreatureAliveStatus", currentCreature, "true");
+                Saver.saveString("Creatures", "CreatureAliveStatus", currentCreature, "true");
                 AliveButton.setText("Transfer to card");
                 isItAlive = true;
-                Inventory.currentItem = 1;
                 Inventory.adapter.clear();
             }
         }

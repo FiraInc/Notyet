@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
 
 import static com.unknown.notyet.Saver.creatureDirectory;
 
@@ -105,9 +106,9 @@ public class Leveling {
     }
 
     private static void saveNewXPAndLevel() {
-        Saver.saveString("CreatureLevel", currentNumerCreature, String.valueOf(currentLevel));
-        Saver.saveString("CreatureXP", currentNumerCreature, String.valueOf(currentXP));
-        Saver.saveString("CreatureXPNeeded", currentNumerCreature, String.valueOf(XPNeeded));
+        Saver.saveString("Creatures", "CreatureLevel", currentNumerCreature, String.valueOf(currentLevel));
+        Saver.saveString("Creatures", "CreatureXP", currentNumerCreature, String.valueOf(currentXP));
+        Saver.saveString("Creatures", "CreatureXPNeeded", currentNumerCreature, String.valueOf(XPNeeded));
     }
 
     private static void getCreatureDirectory() {
@@ -116,5 +117,25 @@ public class Leveling {
         if (!file.exists()) {
             file.mkdirs();
         }
+    }
+
+    static void feed(int creatureFolderNumber, String foodName) {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int day = c.get(Calendar.DAY_OF_YEAR);
+
+        int value = 0;
+
+
+        if (foodName.equals("Bread")) {
+            value = 20;
+        }
+        CurrentCreatureInfo.foodStatus = CurrentCreatureInfo.foodStatus + value;
+        if (CurrentCreatureInfo.foodStatus > 100) {
+            CurrentCreatureInfo.foodStatus = 100;
+        }
+        Saver.saveString("Creatures", "FoodHour", creatureFolderNumber, String.valueOf(hour));
+        Saver.saveString("Creatures", "FoodDay", creatureFolderNumber, String.valueOf(day));
+        CurrentCreatureInfo.saveValues(creatureFolderNumber);
     }
 }

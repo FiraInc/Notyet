@@ -57,13 +57,93 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/moneyBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/topBar"
+        android:background="@android:color/holo_green_light">
+
+        <RelativeLayout
+            android:id="@+id/diamondsBlock"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/diamondsImage"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/diamondsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/diamondsImage"
+                android:gravity="center" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/coinsBlock"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:layout_toRightOf="@id/diamondsBlock">
+
+            <ImageView
+                android:id="@+id/coinsImage"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/coinsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coinsImage"
+                android:gravity="center" />
+        </RelativeLayout>
+
+
+
+        <ImageView
+            android:id="@+id/buyMoneyButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="buyMoneyClicked"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/buyMoneyButton"
+            android:layout_alignTop="@id/buyMoneyButton"
+            android:layout_alignBottom="@id/buyMoneyButton"
+            android:layout_alignLeft="@id/buyMoneyButton"
+            android:gravity="center"
+            android:text="Buy more"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"/>
+
+
+    </RelativeLayout>
+
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomBar"
-        android:layout_below="@id/topBar">
+        android:layout_below="@id/moneyBar">
 
     </ListView>
 
@@ -73,40 +153,21 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_orange_light"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="changeCategory"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/categoryText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/bottomBar"
+        android:layout_alignLeft="@id/bottomBar"
         android:layout_alignBottom="@id/bottomBar"
         android:layout_alignRight="@id/bottomBar"
-        android:layout_alignTop="@id/bottomBar"
-        android:layout_alignLeft="@id/bottomBar">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="GoHome" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/holo_orange_dark"
-            android:onClick="startHatch"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="startBattle"/>
-    </LinearLayout>
+        android:gravity="center"
+        android:textSize="17sp"
+        android:textColor="@android:color/black"
+        android:text="Food"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

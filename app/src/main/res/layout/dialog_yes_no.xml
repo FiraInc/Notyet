@@ -46,8 +46,7 @@
                 android:id="@+id/negativeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/dialog_negative"
-                android:onClick="negativeClicked"/>
+                android:background="@drawable/dialog_negative" />
 
             <TextView
                 android:id="@+id/negativeButtonText"
@@ -60,8 +59,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:text="Negative"
-                android:onClick="negativeClicked"/>
+                android:text="Negative"/>
 
 
         </RelativeLayout>
@@ -79,8 +77,7 @@
                 android:id="@+id/positiveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/dialog_positive"
-                android:onClick="positiveClicked"/>
+                android:background="@drawable/dialog_positive" />
 
             <TextView
                 android:id="@+id/positiveButtonText"
@@ -93,8 +90,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
-                android:text="Positive"
-                android:onClick="positiveClicked"/>
+                android:text="Positive" />
 
 
         </RelativeLayout>

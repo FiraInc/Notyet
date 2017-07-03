@@ -31,7 +31,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:text="Inventory"/>
+                android:text="Creatures"/>
 
         </RelativeLayout>
 
@@ -51,42 +51,26 @@
                 android:gravity="center"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:text="Store"
+                android:text="Health care"
                 android:onClick="storeClicked"/>
 
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list"
+    <GridView
+        android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/topBar"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_above="@id/bottomBar"
         android:stretchMode="columnWidth"
-        android:layout_centerInParent="true">
-    </ListView>
-
-    <ImageView
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/holo_orange_light"
-        android:layout_alignParentBottom="true"
-        android:onClick="changeCategory"/>
-
-    <TextView
-        android:id="@+id/categoryText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/bottomBar"
-        android:layout_alignLeft="@id/bottomBar"
-        android:layout_alignBottom="@id/bottomBar"
-        android:layout_alignRight="@id/bottomBar"
-        android:gravity="center"
-        android:textSize="17sp"
-        android:textColor="@android:color/black"
-        android:text="Food"/>
+        android:layout_centerInParent="true"
+        android:numColumns="3"
+        android:verticalSpacing="10dp">
+    </GridView>
 
     <ProgressBar
         android:id="@+id/progressBar"

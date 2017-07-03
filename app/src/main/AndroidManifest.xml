@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
 
     <application
         android:allowBackup="true"
@@ -26,9 +27,12 @@
         <activity android:name=".LeveledUpScreen"/>
         <activity android:name=".Battle"/>
         <activity android:name=".Inventory"/>
+        <activity android:name=".CreatureInventory"/>
         <activity android:name=".CreatureInfo"/>
         <activity android:name=".Store"/>
         <activity android:name=".Searcher"/>
+        <activity android:name=".BuyMoney"/>
+        <activity android:name=".AllDead"/>
     </application>
 
 </manifest>
